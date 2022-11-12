@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import {Alert, Text} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {ActivityIndicator, Alert, Text} from 'react-native';
+import {AuthContext} from '../../contexts/auth';
 import {
   ButtonText,
   Container,
@@ -16,19 +17,22 @@ function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  function handlerSingIn() {
+  const {signUp, singIn, loadingAuth} = useContext(AuthContext);
+
+  async function handlerSingIn() {
     if (email === '' || password == '') {
       Alert.alert('Preencha todos os campos');
       return;
     }
+    await singIn(email, password);
   }
 
-  function handlerSignUp() {
+  async function handlerSignUp() {
     if (email === '' || password == '' || name === '') {
       Alert.alert('Preencha todos os campos');
       return;
     }
-    Alert.alert('Sair');
+    await signUp(email, password, name);
   }
 
   if (login) {
@@ -48,13 +52,17 @@ function Login() {
           onChangeText={password => setPassword(password)}
         />
         <Button onPress={() => handlerSingIn()}>
-          <ButtonText>Acessar</ButtonText>
+          {loadingAuth ? (
+            <ActivityIndicator size={20} color="#fff" />
+          ) : (
+            <ButtonText>Acessar</ButtonText>
+          )}
         </Button>
         <SignUpButton
           onPress={() => {
             setLogin(false);
-            setEmail('')
-            setPassword('')
+            setEmail('');
+            setPassword('');
           }}>
           <SignUpText>Criar uma conta</SignUpText>
         </SignUpButton>
@@ -81,15 +89,19 @@ function Login() {
         value={password}
         onChangeText={password => setPassword(password)}
       />
-      <Button onPress={() => handlerSingIn()}>
-        <ButtonText>Cadastrar</ButtonText>
+      <Button onPress={() => handlerSignUp()}>
+        {loadingAuth ? (
+          <ActivityIndicator size={20} color="#fff" />
+        ) : (
+          <ButtonText>Cadastrar</ButtonText>
+        )}
       </Button>
       <SignUpButton
         onPress={() => {
           setLogin(true);
-          setEmail('')
-          setName('')
-          setPassword('')
+          setEmail('');
+          setName('');
+          setPassword('');
         }}>
         <SignUpText>Já possuo uma conta</SignUpText>
       </SignUpButton>

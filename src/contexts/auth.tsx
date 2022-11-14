@@ -1,4 +1,4 @@
-import React, {useState, createContext} from 'react';
+import React, {useState, createContext, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,8 @@ interface Context {
   singIn: (email: string, password: string) => void;
   loadingAuth: boolean;
   signOut: () => void;
-  storageUser: (data: User | null) => void
+  storageUser: (data: User | null) => void;
+  loading: boolean;
 }
 
 export interface User {
@@ -23,6 +24,20 @@ export const AuthContext = createContext({} as Context);
 function AuthProvider({children}) {
   const [user, setUser] = useState<User | null>();
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function loadStorage() {
+      const storageUser = await AsyncStorage.getItem('@devApp');
+
+      if (storageUser) {
+        setUser(JSON.parse(storageUser));
+        setLoading(false);
+      }
+      setLoading(false);
+    }
+
+    loadStorage();
+  }, []);
 
   async function signUp(email: string, password: string, name: string) {
     setLoadingAuth(true);
@@ -91,7 +106,16 @@ function AuthProvider({children}) {
   }
 
   return (
-    <AuthContext.Provider value={{signed: !!user, signUp, singIn, loadingAuth, signOut, storageUser}}>
+    <AuthContext.Provider
+      value={{
+        signed: !!user,
+        signUp,
+        singIn,
+        loadingAuth,
+        signOut,
+        storageUser,
+        loading,
+      }}>
       {children}
     </AuthContext.Provider>
   );

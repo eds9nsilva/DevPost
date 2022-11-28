@@ -50,6 +50,7 @@ function Login() {
           placeholder="******"
           value={password}
           onChangeText={password => setPassword(password)}
+          secureTextEntry
         />
         <Button onPress={() => handlerSingIn()}>
           {loadingAuth ? (
@@ -88,6 +89,7 @@ function Login() {
         placeholder="******"
         value={password}
         onChangeText={password => setPassword(password)}
+        secureTextEntry
       />
       <Button onPress={() => handlerSignUp()}>
         {loadingAuth ? (

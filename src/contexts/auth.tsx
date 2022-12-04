@@ -3,6 +3,13 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export interface User {
+  uid: string;
+  nome: string;
+  email: string | null;
+}
+
+
 interface Context {
   signed: boolean;
   signUp: (email: string, password: string, name: string) => void;
@@ -11,13 +18,9 @@ interface Context {
   signOut: () => void;
   storageUser: (data: User | null) => void;
   loading: boolean;
+  user: User;
 }
 
-export interface User {
-  uid: string;
-  nome: string;
-  email: string | null;
-}
 
 export const AuthContext = createContext({} as Context);
 
@@ -115,6 +118,7 @@ function AuthProvider({children}) {
         signOut,
         storageUser,
         loading,
+        user,
       }}>
       {children}
     </AuthContext.Provider>

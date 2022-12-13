@@ -12,6 +12,7 @@ function NewPost() {
 
   const {user} = useContext(AuthContext);
 
+  console.log(post)
   useLayoutEffect(() => {
     const options = navigation.setOptions({
       headerRight: () => (
@@ -22,7 +23,7 @@ function NewPost() {
     });
   }, []);
 
-  async function handlerPots() {
+  const handlerPots = async ()  => {
     console.log(post)
     if (!post) {
       Alert.alert('Error ao criar', 'Preencha todos os campos!')

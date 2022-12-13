@@ -17,3 +17,8 @@ export const ButtonPost = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
+
+export const ListPosts = styled.FlatList`
+  flex: 1;
+  background-color: #f1f1f1;
+`
